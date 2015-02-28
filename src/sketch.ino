@@ -1,12 +1,27 @@
-void setup()
-{
-  pinMode(13, OUTPUT);
+const int outPin =  13;
+long previousMicros = 0;
+unsigned long interval = 4545/2;
+int out = LOW;
+unsigned long currentMicros;
+
+void setup() {
+    pinMode(outPin, OUTPUT);
 }
+
 
 void loop()
 {
-  digitalWrite(13, HIGH);
-  delayMicroseconds(4510 / 4);
-  digitalWrite(13, LOW);
-  delayMicroseconds(4510 / 4);
+    currentMicros = micros();
+
+    if (currentMicros - previousMicros > interval) {
+        previousMicros = currentMicros;
+
+        if (out == HIGH) {
+            out = LOW;
+        } else if (out == LOW) {
+            out = HIGH;
+        }
+
+        digitalWrite(outPin, out);
+    }
 }
