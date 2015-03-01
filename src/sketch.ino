@@ -1,6 +1,6 @@
 long previousMicros = 0;
 long currentMicros;
-unsigned long interval = 4545/2;
+unsigned long interval = freq_to_micros(440.0);
 int out = LOW;
 
 void setup()
@@ -8,6 +8,10 @@ void setup()
     for (int i = 0; i < 8; i++) {
         pinMode(i, OUTPUT);
     }
+}
+
+unsigned long freq_to_micros(float freq) {
+    return (1000.0 / freq) * 1000.0;
 }
 
 void square() {
