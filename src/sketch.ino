@@ -1,3 +1,8 @@
+long previousMicros = 0;
+long currentMicros;
+unsigned long interval = 4545/2;
+int out = LOW;
+
 void setup()
 {
     for (int i = 0; i < 8; i++) {
@@ -6,14 +11,22 @@ void setup()
 }
 
 void square() {
-    for (int i = 0; i < 8; i++) {
-        digitalWrite(i, HIGH);
+
+    currentMicros = micros();
+    if (currentMicros - previousMicros > interval) {
+        previousMicros = micros();
+
+        if (out == HIGH) {
+            out = LOW;
+        } else if (out == LOW) {
+            out = HIGH;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            digitalWrite(i, out);
+        }
     }
-    delayMicroseconds(4545 / 2);
-    for (int i = 0; i < 8; i++) {
-        digitalWrite(i, LOW);
-    }
-    delayMicroseconds(4545 / 2);
+
 }
 
 void loop()
