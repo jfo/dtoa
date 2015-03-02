@@ -12,7 +12,8 @@ void setup()
         pinMode(i, OUTPUT);
     }
 
-    Serial.begin(9600);
+    Serial.begin(115200);
+    Serial.setTimeout(10);
 }
 
 unsigned long freq_to_micros(float freq) {
