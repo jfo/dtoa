@@ -30,18 +30,20 @@ void square() {
         reset_interval();
     }
 
-    currentMicros = micros();
-    if (currentMicros - previousMicros > interval) {
-        previousMicros = micros();
+    if (interval != 0.0) {
+        currentMicros = micros();
+        if (currentMicros - previousMicros > interval) {
+            previousMicros = micros();
 
-        if (out == HIGH) {
-            out = LOW;
-        } else if (out == LOW) {
-            out = HIGH;
-        }
+            if (out == HIGH) {
+                out = LOW;
+            } else if (out == LOW) {
+                out = HIGH;
+            }
 
-        for (int i = 0; i < 8; i++) {
-            digitalWrite(i, out);
+            for (int i = 0; i < 8; i++) {
+                digitalWrite(i, out);
+            }
         }
     }
 
