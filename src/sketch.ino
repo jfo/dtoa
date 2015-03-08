@@ -1,10 +1,7 @@
 long previousMicros = 0;
 long currentMicros;
 unsigned long interval = freq_to_micros(440.0);
-unsigned long new_interval = freq_to_micros(440.0);
 int out = LOW;
-
-int change = 0;
 
 void square() {
 
@@ -28,8 +25,8 @@ void square() {
             }
         }
     }
-
 }
+
 void beep() {
     int now = millis();
     while (millis() < now + 250) {
@@ -48,7 +45,7 @@ void setup()
     beep();
 }
 
-unsigned long freq_to_micros(float freq) {
+float freq_to_micros(float freq) {
     return (1000.0 / freq) * 1000.0;
 }
 
@@ -77,43 +74,39 @@ void reset_interval() {
 }
 
 
-unsigned long sample_interval = freq_to_micros(44000.0);
 unsigned long sine_interval = freq_to_micros(440.0);
-unsigned long samplePreviousMicros = 0;
 int step = 0;
 int step_wise = 255;
 int* binactivearray;
 
 void sine() {
 
-    if (step == 0) {
-        step_wise = 100;
-    } else if (step == 100) {
-        step_wise = -100;
+    if (step <= 0) {
+        step_wise = 255;
+    } else if (step >= 255) {
+        step_wise = -255;
     }
 
     currentMicros = micros();
-    if (currentMicros - samplePreviousMicros >= sample_interval) {
-        samplePreviousMicros = currentMicros;
-        if (currentMicros - previousMicros >= (sine_interval    ) ) {
-            previousMicros = currentMicros;
 
-            binactivearray = activepins(step);
+    if (currentMicros - previousMicros >= (sine_interval  /  1  ) ) {
+        previousMicros = currentMicros;
 
-            // for (int i = 0; i < 8; i += 1) {
-            //     Serial.print(binactivearray[i]);
-            // }
-            // Serial.print('\n');
+        binactivearray = activepins(step);
 
-            for (int i = 0; i < 8; i++) {
-                if (binactivearray[i]) {
-                    digitalWrite(i, HIGH);
-                } else {
-                    digitalWrite(i, LOW);
-                }
+        // for (int i = 0; i < 8; i += 1) {
+        //     Serial.print(binactivearray[i]);
+        // }
+        // Serial.print('\n');
+
+        for (int i = 0; i < 8; i++) {
+            if (binactivearray[i]) {
+                digitalWrite(i, HIGH);
+            } else {
+                digitalWrite(i, LOW);
             }
-            step += step_wise;
         }
+        step += step_wise;
     }
 }
 
