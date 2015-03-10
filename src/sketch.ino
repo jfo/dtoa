@@ -73,31 +73,28 @@ void reset_interval() {
     interval = freq_to_micros(Serial.parseFloat());
 }
 
-
-unsigned long sine_interval = freq_to_micros(440.0);
-int step = 0;
-int step_wise = 255;
+int sample_interval = freq_to_micros(112640);
 int* binactivearray;
+
+unsigned long t = 0;
+int v = 0;
+float diff;
 
 void sine() {
 
-    if (step <= 0) {
-        step_wise = 255;
-    } else if (step >= 255) {
-        step_wise = -255;
-    }
-
     currentMicros = micros();
 
-    if (currentMicros - previousMicros >= (sine_interval  /  1  ) ) {
+    diff = currentMicros - previousMicros;
+
+    if (diff >= sample_interval) {
+        v = (((sin(440.0 * 3.1415 * t)) + 1 ) * 128) -1;
+        t += diff;
+
         previousMicros = currentMicros;
+        binactivearray = activepins(v);
 
-        binactivearray = activepins(step);
-
-        // for (int i = 0; i < 8; i += 1) {
-        //     Serial.print(binactivearray[i]);
-        // }
-        // Serial.print('\n');
+        Serial.print(t);
+        Serial.print('\n');
 
         for (int i = 0; i < 8; i++) {
             if (binactivearray[i]) {
@@ -106,7 +103,9 @@ void sine() {
                 digitalWrite(i, LOW);
             }
         }
-        step += step_wise;
+
+        // y = (sin(freq * pi * x) + 1) * 128) - 1
+
     }
 }
 
